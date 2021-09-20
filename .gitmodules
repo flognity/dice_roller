@@ -1,0 +1,3 @@
+[submodule "lib/util/app_theme"]
+	path = lib/util/app_theme
+	url = https://github.com/flognity/app_theme.git
