@@ -1,3 +1,9 @@
 [submodule "lib/util/app_theme"]
 	path = lib/util/app_theme
 	url = https://github.com/flognity/app_theme.git
+[submodule "lib/util/google_ads"]
+	path = lib/util/google_ads
+	url = https://github.com/flognity/google_ads.git
+[submodule "lib/util/language_provider"]
+	path = lib/util/language_provider
+	url = https://github.com/flognity/language_provider.git

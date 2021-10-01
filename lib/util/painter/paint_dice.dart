@@ -2,13 +2,17 @@ import 'dart:ui';
 
 import 'package:flutter/material.dart';
 
+import '../../globals.dart';
+
 //paint the dice
 class PaintDice extends CustomPainter {
   int dieNumber;
   Color strokeColor;
-  Color? fillColor;
+  Color fillColor;
   PaintDice(
-      {required this.dieNumber, required this.strokeColor, this.fillColor});
+      {required this.dieNumber,
+      required this.strokeColor,
+      required this.fillColor});
 
   RRect rRectForDice(Size size) {
     return RRect.fromRectAndCorners(
@@ -43,7 +47,7 @@ class PaintDice extends CustomPainter {
     //define the main filling
     Paint paintMainFill = Paint()
       ..style = PaintingStyle.fill
-      ..color = fillColor ?? const Color(0xffffffff).withOpacity(0);
+      ..color = fillColor;
     //define the secondary filling
     Paint paintSecondFill = Paint()
       ..style = PaintingStyle.fill
@@ -55,6 +59,10 @@ class PaintDice extends CustomPainter {
 
     //draw the die face circles
     switch (dieNumber) {
+      case -1:
+        //No dice number -> animate the dices
+        //Nothing to do here...
+        break;
       case 1:
         {
           drawCircle(
@@ -205,16 +213,34 @@ class PaintDice extends CustomPainter {
               paintSecondFill);
         }
         break;
-
       default:
         {
-          //TODO: Show rolling animation?
+          TextPainter textPainter = TextPainter(
+              text: TextSpan(
+                  text: dieNumber.toString(),
+                  style: Globals.textStyles.dieNumber.copyWith(
+                    color: strokeColor,
+                    fontSize: size.width * 0.4,
+                  )),
+              textDirection: TextDirection.ltr)
+            ..layout(maxWidth: size.width);
+          textPainter.paint(
+              canvas,
+              Offset(
+                (size.width - textPainter.width) * 0.5,
+                (size.height - textPainter.height) * 0.5,
+              ));
         }
         break;
     }
   }
 
   @override
-  bool shouldRepaint(PaintDice oldDelegate) =>
-      dieNumber != oldDelegate.dieNumber;
+  bool shouldRepaint(PaintDice oldDelegate) {
+    bool dieChange = dieNumber != oldDelegate.dieNumber;
+    bool strokeChange = strokeColor != oldDelegate.strokeColor;
+    bool fillColorChange = fillColor != oldDelegate.fillColor;
+
+    return dieChange || strokeChange || fillColorChange;
+  }
 }

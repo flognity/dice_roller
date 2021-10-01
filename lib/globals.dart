@@ -19,6 +19,9 @@ class _TextStyles {
         fontWeight: FontWeight.bold,
         fontSize: 14,
       );
+  TextStyle get dieNumber => const TextStyle(
+        fontWeight: FontWeight.bold,
+      );
 }
 
 class Globals with AppTheme {
