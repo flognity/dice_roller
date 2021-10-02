@@ -3,11 +3,12 @@ import 'dart:ui';
 
 import 'package:animated_widgets/widgets/rotation_animated.dart';
 import 'package:animated_widgets/widgets/shake_animated_widget.dart';
+import 'package:dice_roller/models/ad_state.dart';
 import 'package:dice_roller/models/dice_model.dart';
-import 'package:dice_roller/util/google_ads/ad_state.dart';
 import 'package:dice_roller/util/language_provider/language_text_provider.dart';
 import 'package:dice_roller/util/painter/paint_dice.dart';
 import 'package:dice_roller/widgets/about_dialog.dart';
+import 'package:dice_roller/widgets/elevated_icon_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
@@ -121,59 +122,63 @@ class _DiceRollerScreenState extends State<DiceRollerScreen> {
         actions: [
           IconButton(
             onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => const DiceHistoryScreen(),
-                ),
-              );
-            },
-            icon: const Icon(Icons.format_list_numbered),
-          ),
-          IconButton(
-            onPressed: () {
               aboutDialog(context, Globals.appName, _packageInfo.version);
             },
             icon: const Icon(Icons.info),
           ),
         ],
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          showModalBottomSheet(
-            context: context,
-            isScrollControlled: true,
-            builder: (context) => ConstrainedBox(
-              constraints: BoxConstraints(
-                maxHeight: MediaQuery.of(context).size.height * 0.8,
-                minHeight: MediaQuery.of(context).size.height * 0.2,
-              ),
-              child: const ChangeDiceScreen(),
-            ),
-          );
-        },
-        child: const Icon(Icons.settings),
-      ),
       bottomNavigationBar: BottomAppBar(
         shape: const CircularNotchedRectangle(),
         child: Consumer<DiceModel>(
           builder: (context, diceModel, child) => Row(
-            mainAxisAlignment: MainAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
-              ElevatedButton(
-                onPressed: () => diceModel.rollAllDice(),
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(
-                    vertical: 20.0,
-                    horizontal: 8.0,
-                  ),
-                  child: Text(
-                    diceModel.getNumberOfDice < 2
-                        ? LanguageTextProvider.of(context).getText('roll_die')
-                        : LanguageTextProvider.of(context).getText('roll_dice'),
-                    style: Globals.textStyles.button,
+              ElevatedIconButton(
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => DiceHistoryScreen(
+                        diceHistory: diceModel.getDiceHistory,
+                        diceColor: diceModel.getDiceColor,
+                      ),
+                    ),
+                  );
+                },
+                icon: Icons.format_list_numbered,
+              ),
+              Expanded(
+                child: ElevatedButton(
+                  onPressed: () => diceModel.rollAllDice(),
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(
+                      vertical: 20.0,
+                      horizontal: 8.0,
+                    ),
+                    child: Text(
+                      diceModel.getNumberOfDice < 2
+                          ? LanguageTextProvider.of(context).getText('roll_die')
+                          : LanguageTextProvider.of(context)
+                              .getText('roll_dice'),
+                      style: Globals.textStyles.button,
+                    ),
                   ),
                 ),
+              ),
+              ElevatedIconButton(
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => ChangeDiceScreen(
+                        interstitialAdUnitId: Provider.of<AdState>(context)
+                            .interstitialAdUnitIdSettingsScreen,
+                      ),
+                    ),
+                  );
+                },
+                icon: Icons.settings,
               ),
             ],
           ),
@@ -269,7 +274,7 @@ class _DiceRollerScreenState extends State<DiceRollerScreen> {
             if (banner == null)
               const SizedBox(height: 50.0)
             else
-              Container(
+              SizedBox(
                 height: 50.0,
                 child: AdWidget(ad: banner!),
               )

@@ -40,6 +40,7 @@ dependencies:
   shared_preferences: ^2.0.8
   user_messaging_platform: ^1.1.0
   google_mobile_ads: ^0.13.5
+  flutter_config: ^2.0.0
 
 dev_dependencies:
   flutter_test:

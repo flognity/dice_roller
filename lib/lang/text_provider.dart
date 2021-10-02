@@ -174,6 +174,12 @@ class TextProvider implements BaseTextProvider {
       LangCode.fr: 'Clair',
       LangCode.es: 'Ligero',
     },
+    'settings': {
+      LangCode.en: 'Settings',
+      LangCode.de: 'Einstellungen',
+      LangCode.fr: 'Paramètres',
+      LangCode.es: 'Ajustes',
+    },
   };
   TextProvider();
 

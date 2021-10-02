@@ -134,10 +134,15 @@ class DiceModel extends ChangeNotifier {
       List<String> strHistory = pref.getStringList('diceHistory') ?? [];
 
       if (strHistory.isNotEmpty) {
-        _diceHistory = strHistory
-            .map((String historyItem) =>
-                SavedDiceResult.fromJson(jsonDecode(historyItem)))
-            .toList();
+        try {
+          _diceHistory = strHistory
+              .map((String historyItem) =>
+                  SavedDiceResult.fromJson(jsonDecode(historyItem)))
+              .toList();
+        } catch (e) {
+          // history can't be restored
+          _diceHistory = [];
+        }
       }
     });
   }

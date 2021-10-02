@@ -1,8 +1,10 @@
+import 'package:dice_roller/models/ad_state.dart';
 import 'package:dice_roller/screens/dice_roller_screen.dart';
-import 'package:dice_roller/util/google_ads/ad_state.dart';
 import 'package:dice_roller/util/google_ads/user_messaging_platform.dart';
 import 'package:dice_roller/util/language_provider/language_text_provider.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_config/flutter_config.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:provider/provider.dart';
@@ -10,8 +12,15 @@ import 'package:provider/provider.dart';
 import 'globals.dart';
 import 'models/dice_model.dart';
 
-void main() {
+void main() async {
+  if (kReleaseMode) {
+    //This will replace the implementation of debugPrint with something that does nothing in release
+    debugPrint = (String? message, {int? wrapWidth}) {};
+  }
+
   WidgetsFlutterBinding.ensureInitialized();
+  await FlutterConfig.loadEnvVariables();
+
   final Future<InitializationStatus> initFuture =
       MobileAds.instance.initialize();
   final adState = AdState(initFuture);
